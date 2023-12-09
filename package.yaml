@@ -1,0 +1,9 @@
+name: tile-generator
+version: 0.1.0.0
+dependencies:
+  - base >= 4.7 && < 5
+executables:
+  tile-generator:
+    main: Main.hs
+    source-dirs: app
+    dependencies: []
