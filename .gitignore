@@ -1,35 +1,31 @@
-# Stack build artifacts
-.stack-work/
+# F# and .NET Core specific
+bin/
+obj/
+*.userprefs
+*.usertasks
 
-# Cabal build artifacts (if using Cabal directly)
-dist-newstyle/
-dist/
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]est[Rr]esult*/
 
-# Stack's program's local bin path
-.local/bin/
+# Visual Studio specific
+*.suo
+*.user
+*.sln.docstates
+.vs/
+*.cache
+*.csproj
+*.vbproj
+*.fsproj
+*.swp
+*.swo
 
-# Hidden directory created by stack
-.hie/
-
-# Haskell IDE Engine output
-.hie-bios/
-
-# GHCi history file
-.ghci_history
-
-# Cabal package environment files
-*.cabal-sandbox/
-cabal.sandbox.config
-cabal.project.local
-cabal.project.local.*
-
-# Logs
-*.log
-
-# System-specific files
-.DS_Store # macOS
-Thumbs.db # Windows
-
-# Input and output files
 source-images/
 tiles/
