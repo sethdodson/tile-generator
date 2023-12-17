@@ -11,6 +11,7 @@ build-type:     Simple
 executable tile-generator
   main-is: Main.hs
   other-modules:
+      TileGeneration
       Paths_tile_generator
   hs-source-dirs:
       app

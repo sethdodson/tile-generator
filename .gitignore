@@ -29,3 +29,7 @@ cabal.project.local.*
 # System-specific files
 .DS_Store # macOS
 Thumbs.db # Windows
+
+# Input and output files
+source-images/
+tiles/
