@@ -9,4 +9,8 @@
     <Compile Include="TilesetGenerator.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>

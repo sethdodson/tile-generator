@@ -24,6 +24,4 @@ bld/
 *.cache
 *.swp
 *.swo
-
-source-images/
 tiles/
