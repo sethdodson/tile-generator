@@ -1,4 +1,4 @@
-module Tests
+module TilesetGeneratorTests
 
 open System
 open Xunit
