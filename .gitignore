@@ -20,10 +20,8 @@ bld/
 *.user
 *.sln.docstates
 .vs/
+.vscode/
 *.cache
-*.csproj
-*.vbproj
-*.fsproj
 *.swp
 *.swo
 
