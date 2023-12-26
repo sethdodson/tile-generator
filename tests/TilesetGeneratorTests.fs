@@ -12,13 +12,15 @@ type TilesetGeneratorTests() =
     let outputDirectoryPath = Path.Combine(projectDirectoryPath, "tiles")
 
     interface IDisposable with
-        member _.Dispose() = ()
-
+        member _.Dispose() =
+            // clean up the output directory
+            let files = Directory.GetFiles(outputDirectoryPath)
+            for file in files do
+                File.Delete(file)
 
     [<Fact>]
     member _. ``generateFromSourceImage generates a png given valid directories`` () =
-        // Arrange
-        // get three levels up from the current directory                
+        // Arrange             
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)        
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
 
@@ -27,3 +29,5 @@ type TilesetGeneratorTests() =
 
         // Assert
         outputDirectory.GetFiles().Length.Should().Be(1)
+
+    
