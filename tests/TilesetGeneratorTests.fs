@@ -10,7 +10,7 @@ open TilesetGenerator
 type TilesetGeneratorTests() =
     let projectDirectoryPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName
     let sourceDirectoryPath = Path.Combine(projectDirectoryPath, "source-images")
-    let outputDirectoryPath = Path.Combine(projectDirectoryPath, "tiles")
+    let outputDirectoryPath = Path.Combine(projectDirectoryPath, "tiles")    
 
     interface IDisposable with
         member _.Dispose() =
@@ -51,3 +51,26 @@ type TilesetGeneratorTests() =
         use tilesetImage = Image.FromFile(files.[0].FullName) :?> Bitmap
         tilesetImage.Width.Should().Be(expectedWidth) |> ignore
         tilesetImage.Height.Should().Be(expectedHeight) |> ignore
+    
+    [<Fact>]
+    member _.``generated tileset is not of uniform color`` () =
+        // Arrange
+        let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
+        let outputDirectory = new DirectoryInfo(outputDirectoryPath)
+
+        // Act
+        generateFromSourceImage sourceDirectory outputDirectory
+
+        // Assert
+        let files = outputDirectory.GetFiles()
+        files.Length.Should().Be(1) |> ignore
+        use tilesetImage = Image.FromFile(files.[0].FullName) :?> Bitmap
+        let firstPixel = tilesetImage.GetPixel(0, 0)
+        let allPixels = 
+            seq {
+                for x in 0 .. tilesetImage.Width - 1 do
+                    for y in 0 .. tilesetImage.Height - 1 do
+                        yield tilesetImage.GetPixel(x, y)
+            }
+        let isUniformColor = allPixels |> Seq.forall (fun pixel -> pixel = firstPixel)
+        isUniformColor.Should().BeFalse("if the source image isn't of uniform color, then neither should the tileset.") |> ignore
