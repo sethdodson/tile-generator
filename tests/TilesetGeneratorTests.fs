@@ -74,3 +74,5 @@ type TilesetGeneratorTests() =
             }
         let isUniformColor = allPixels |> Seq.forall (fun pixel -> pixel = firstPixel)
         isUniformColor.Should().BeFalse("if the source image isn't of uniform color, then neither should the tileset.") |> ignore
+
+    

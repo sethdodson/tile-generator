@@ -1,2 +1,13 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
-printfn "Hello from F#"
+﻿open TilesetGenerator
+open System.IO
+
+[<EntryPoint>]
+let main argv =
+    let sourceDirectoryPath = argv.[0]
+    let outputDirectoryPath = argv.[1]
+    let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
+    let outputDirectory = new DirectoryInfo(outputDirectoryPath)
+
+    (generateFromSourceImage sourceDirectory outputDirectory)
+
+    0 // return an integer exit code
