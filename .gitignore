@@ -25,3 +25,4 @@ bld/
 *.swp
 *.swo
 tiles/
+.fake
