@@ -3,6 +3,7 @@ module TilesetGeneratorTests
 open Faqt
 open Xunit
 open System.IO
+open System.Drawing
 open System
 open TilesetGenerator
 
@@ -14,6 +15,7 @@ type TilesetGeneratorTests() =
     interface IDisposable with
         member _.Dispose() =
             // clean up the output directory
+            Console.WriteLine("Cleaning up output directory...")
             let files = Directory.GetFiles(outputDirectoryPath)
             for file in files do
                 File.Delete(file)
@@ -28,6 +30,24 @@ type TilesetGeneratorTests() =
         generateFromSourceImage sourceDirectory outputDirectory
 
         // Assert
-        outputDirectory.GetFiles().Length.Should().Be(1)
+        outputDirectory.GetFiles().Should().HaveLength(1)
 
-    
+    [<Fact>]
+    member _.``generated tileset has correct dimensions`` () =
+        // Arrange
+        let tilesAcross, tilesDown = 5, 4  // 5 tiles across and 4 tiles down
+        let tileWidth, tileHeight = 256, 256
+        let expectedWidth = 1280 // 5 tiles across
+        let expectedHeight =  640 //tileHeight + (tilesDown - 1) * (tileHeight / 2)
+        let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
+        let outputDirectory = new DirectoryInfo(outputDirectoryPath)
+
+        // Act
+        generateFromSourceImage sourceDirectory outputDirectory
+
+        // Assert
+        let files = outputDirectory.GetFiles()
+        files.Length.Should().Be(1) |> ignore
+        use tilesetImage = Image.FromFile(files.[0].FullName) :?> Bitmap
+        tilesetImage.Width.Should().Be(expectedWidth) |> ignore
+        tilesetImage.Height.Should().Be(expectedHeight) |> ignore

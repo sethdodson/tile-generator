@@ -5,6 +5,6 @@ open System.Drawing
 
 
 let generateFromSourceImage (sourceDirectory:DirectoryInfo) (outputDirectory:DirectoryInfo) =
-    let bitmap = new Bitmap(1, 1)  // Create a tiny bitmap
+    use bitmap = new Bitmap(1280, 640)
     let outputPath = Path.Combine(outputDirectory.FullName, "generated.png")
     bitmap.Save(outputPath, Imaging.ImageFormat.Png)
