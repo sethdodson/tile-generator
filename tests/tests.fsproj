@@ -10,7 +10,8 @@
 
   <ItemGroup>
     <Compile Include="TilesetGeneratorTests.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="TileTests.fs" />
+    <Compile Include="Program.fs" />    
   </ItemGroup>
 
   <ItemGroup>

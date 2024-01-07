@@ -25,25 +25,25 @@ type TilesetGeneratorTests() =
         // Arrange             
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)        
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
+        let numberOfTiles = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory
+        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles
 
         // Assert
         outputDirectory.GetFiles().Should().HaveLength(1)
 
     [<Fact>]
-    member _.``generated tileset has correct dimensions`` () =
+    member _.``generated tile has correct dimensions`` () =
         // Arrange
-        let tilesAcross, tilesDown = 5, 4  // 5 tiles across and 4 tiles down
-        let tileWidth, tileHeight = 256, 256
-        let expectedWidth = 1280 // 5 tiles across
-        let expectedHeight =  640 //tileHeight + (tilesDown - 1) * (tileHeight / 2)
+        let expectedWidth = 640 // 5 tiles across
+        let expectedHeight =  320 //tileHeight + (tilesDown - 1) * (tileHeight / 2)
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
+        let numberOfTiles = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory
+        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles
 
         // Assert
         let files = outputDirectory.GetFiles()
@@ -57,9 +57,10 @@ type TilesetGeneratorTests() =
         // Arrange
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
+        let numberOfTiles = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory
+        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles
 
         // Assert
         let files = outputDirectory.GetFiles()
