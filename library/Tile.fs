@@ -14,23 +14,16 @@ type Tile = {
 }
 
 let createTile (boundingBoxTopLeft: Point) (boundingBoxSideLength: int) : Tile =
+    let middle = boundingBoxSideLength / 2
+    // this is the gap between the top of the bounding box and the top of the tile
+    let verticalPadding = boundingBoxSideLength / 4    
     {
         BoundingBoxTopLeft = boundingBoxTopLeft
-        BoundingBoxTopRight = Point(256, 256)
+        BoundingBoxTopRight = Point(boundingBoxSideLength, boundingBoxTopLeft.Y)
         BoundingBoxBottomLeft = Point(0, 0)
-        BoundingBoxBottomRight = Point(256, 0)
-        Top = Point(128, 192)
-        Right = Point(256, 128)
-        Bottom = Point(128, 64)
-        Left = Point(0, 128)
+        BoundingBoxBottomRight = Point(boundingBoxSideLength, 0)
+        Top = Point(middle, middle + verticalPadding)
+        Right = Point(boundingBoxSideLength, middle)
+        Bottom = Point(middle, verticalPadding)
+        Left = Point(0, middle)
     }
-    // {
-    //     BoundingBoxTopLeft = boundingBoxTopLeft
-    //     BoundingBoxTopRight = Point(boundingBoxTopLeft.X + boundingBoxSideLength, boundingBoxTopLeft.Y)
-    //     BoundingBoxBottomLeft = Point(boundingBoxTopLeft.X, boundingBoxTopLeft.Y + boundingBoxSideLength)
-    //     BoundingBoxBottomRight = Point(boundingBoxTopLeft.X + boundingBoxSideLength, boundingBoxTopLeft.Y + boundingBoxSideLength)
-    //     Top = Point(boundingBoxSideLength / 2, boundingBoxTopLeft.Y)
-    //     Right = Point(boundingBoxSideLength, boundingBoxTopLeft.Y + boundingBoxSideLength / 2)
-    //     Bottom = Point(boundingBoxTopLeft.X + boundingBoxSideLength / 2, boundingBoxTopLeft.Y + boundingBoxSideLength)
-    //     Left = Point(boundingBoxTopLeft.X, boundingBoxTopLeft.Y + boundingBoxSideLength / 2)
-    // }
