@@ -13,39 +13,39 @@ type TileTestData =
     {
         ExpectedTile: Tile
         BoundingBoxTopLeft: Point
-        BoundingBoxSideLength: int
+        BoundingBoxWidth: int
     }
 
     static member Scenarios =
         // Tile is the first tile in the upper left corner.
         let firstTile = {
             ExpectedTile = {
-                BoundingBoxTopLeft = Point(0, 256)
-                BoundingBoxTopRight = Point(256, 256)
+                BoundingBoxTopLeft = Point(0, 128)
+                BoundingBoxTopRight = Point(256, 128)
                 BoundingBoxBottomLeft = Point(0, 0)
                 BoundingBoxBottomRight = Point(256, 0)
-                Top = Point(128, 192)
-                Right = Point(256, 128)
-                Bottom = Point(128, 64)
-                Left = Point(0, 128)
+                Top = Point(128, 128)
+                Right = Point(256, 64)
+                Bottom = Point(128, 0)
+                Left = Point(0, 64)
             }
-            BoundingBoxTopLeft = Point(0, 256)
-            BoundingBoxSideLength = 256
+            BoundingBoxTopLeft = Point(0, 128)
+            BoundingBoxWidth = 256
         }
         // Tile with a different size.
         let biggerTile = {
             ExpectedTile = {
-                BoundingBoxTopLeft = Point(0, 512)
-                BoundingBoxTopRight = Point(512, 512)
+                BoundingBoxTopLeft = Point(0, 256)
+                BoundingBoxTopRight = Point(512, 256)
                 BoundingBoxBottomLeft = Point(0, 0)
                 BoundingBoxBottomRight = Point(512, 0)
-                Top = Point(256, 384)
-                Right = Point(512, 256)
-                Bottom = Point(256, 128)
-                Left = Point(0, 256)
+                Top = Point(256, 256)
+                Right = Point(512, 128)
+                Bottom = Point(256, 0)
+                Left = Point(0, 128)
             }
-            BoundingBoxTopLeft = Point(0, 512)
-            BoundingBoxSideLength = 512
+            BoundingBoxTopLeft = Point(0, 256)
+            BoundingBoxWidth = 512
         }
         // We need to return IEnumerable<object[]> for MemberDataAttribute.
         [|firstTile; biggerTile|] |> Seq.map(fun x -> [|x|])
@@ -58,7 +58,7 @@ type TileTests() =
         // Arrange
 
         // Act
-        let tile = createTile tileTestData.BoundingBoxTopLeft tileTestData.BoundingBoxSideLength
+        let tile = createTile tileTestData.BoundingBoxTopLeft tileTestData.BoundingBoxWidth
 
         // Assert
         tile.BoundingBoxTopLeft.Should().Be(tileTestData.ExpectedTile.BoundingBoxTopLeft) |> ignore
@@ -70,3 +70,6 @@ type TileTests() =
         tile.Bottom.Should().Be(tileTestData.ExpectedTile.Bottom) |> ignore
         tile.Left.Should().Be(tileTestData.ExpectedTile.Left) |> ignore        
         tile.Should().Be(tileTestData.ExpectedTile) |> ignore
+
+    [<Fact>]
+    

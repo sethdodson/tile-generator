@@ -13,17 +13,17 @@ type Tile = {
     BoundingBoxBottomRight: Point
 }
 
-let createTile (boundingBoxTopLeft: Point) (boundingBoxSideLength: int) : Tile =
-    let middle = boundingBoxSideLength / 2
-    // this is the gap between the top of the bounding box and the top of the tile
-    let verticalPadding = boundingBoxSideLength / 4    
+let createTile (boundingBoxTopLeft: Point) (boundingBoxWidth: int) : Tile =
+    let middleWidth = boundingBoxWidth / 2
+    let height = middleWidth
+    let middleHeight = height / 2
     {
         BoundingBoxTopLeft = boundingBoxTopLeft
-        BoundingBoxTopRight = Point(boundingBoxSideLength, boundingBoxTopLeft.Y)
+        BoundingBoxTopRight = Point(boundingBoxWidth, boundingBoxTopLeft.Y)
         BoundingBoxBottomLeft = Point(0, 0)
-        BoundingBoxBottomRight = Point(boundingBoxSideLength, 0)
-        Top = Point(middle, middle + verticalPadding)
-        Right = Point(boundingBoxSideLength, middle)
-        Bottom = Point(middle, verticalPadding)
-        Left = Point(0, middle)
+        BoundingBoxBottomRight = Point(boundingBoxWidth, 0)
+        Top = Point(middleWidth, height)
+        Right = Point(boundingBoxWidth, middleHeight)
+        Bottom = Point(middleWidth, 0)
+        Left = Point(0, middleHeight)
     }
