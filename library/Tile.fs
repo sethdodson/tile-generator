@@ -14,16 +14,20 @@ type Tile = {
 }
 
 let createTile (boundingBoxTopLeft: Point) (boundingBoxWidth: int) : Tile =
-    let middleWidth = boundingBoxWidth / 2
-    let height = middleWidth
-    let middleHeight = height / 2
+    let leftSide = boundingBoxTopLeft.X
+    let rightSide = boundingBoxTopLeft.X + boundingBoxWidth
+    let top = boundingBoxTopLeft.Y    
+    let middleWidth = leftSide + (boundingBoxWidth / 2)
+    let height = boundingBoxWidth / 2
+    let bottom = top - height
+    let middleHeight = bottom + (height / 2)
     {
         BoundingBoxTopLeft = boundingBoxTopLeft
-        BoundingBoxTopRight = Point(boundingBoxWidth, boundingBoxTopLeft.Y)
-        BoundingBoxBottomLeft = Point(0, 0)
-        BoundingBoxBottomRight = Point(boundingBoxWidth, 0)
-        Top = Point(middleWidth, height)
-        Right = Point(boundingBoxWidth, middleHeight)
-        Bottom = Point(middleWidth, 0)
-        Left = Point(0, middleHeight)
+        BoundingBoxTopRight = Point(rightSide, top)
+        BoundingBoxBottomLeft = Point(leftSide, bottom)
+        BoundingBoxBottomRight = Point(rightSide, bottom)
+        Top = Point(middleWidth, top)
+        Right = Point(rightSide, middleHeight)
+        Bottom = Point(middleWidth, bottom)
+        Left = Point(leftSide, middleHeight)
     }

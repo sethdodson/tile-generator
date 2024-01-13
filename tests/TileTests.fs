@@ -47,8 +47,23 @@ type TileTestData =
             BoundingBoxTopLeft = Point(0, 256)
             BoundingBoxWidth = 512
         }
+        // Tile is close to the middle of a 1024x1024 map. 4 tiles across, 8 tiles down.
+        let middleTile = {
+            ExpectedTile = {
+                BoundingBoxTopLeft = Point(512, 640)
+                BoundingBoxTopRight = Point(768, 640)
+                BoundingBoxBottomLeft = Point(512, 512)
+                BoundingBoxBottomRight = Point(768, 512)
+                Top = Point(640, 640)
+                Right = Point(768, 576)
+                Bottom = Point(640, 512)
+                Left = Point(512, 576)
+            }
+            BoundingBoxTopLeft = Point(512, 640)
+            BoundingBoxWidth = 256
+        }
         // We need to return IEnumerable<object[]> for MemberDataAttribute.
-        [|firstTile; biggerTile|] |> Seq.map(fun x -> [|x|])
+        [|firstTile; biggerTile; middleTile|] |> Seq.map(fun x -> [|x|])
 
 type TileTests() =
 
@@ -70,6 +85,3 @@ type TileTests() =
         tile.Bottom.Should().Be(tileTestData.ExpectedTile.Bottom) |> ignore
         tile.Left.Should().Be(tileTestData.ExpectedTile.Left) |> ignore        
         tile.Should().Be(tileTestData.ExpectedTile) |> ignore
-
-    [<Fact>]
-    
