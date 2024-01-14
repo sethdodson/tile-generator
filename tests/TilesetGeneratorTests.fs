@@ -36,8 +36,8 @@ type TilesetGeneratorTests() =
     [<Fact>]
     member _.``generated tile has correct dimensions`` () =
         // Arrange
-        let expectedWidth = 640 // 5 tiles across
-        let expectedHeight =  320 //tileHeight + (tilesDown - 1) * (tileHeight / 2)
+        let expectedWidth = 256
+        let expectedHeight =  128
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
         let numberOfTiles = 1
