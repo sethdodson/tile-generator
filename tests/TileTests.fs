@@ -5,6 +5,7 @@ open Faqt
 open Xunit
 open System.Drawing
 open Tile
+open System
 
 // TileTestData is a type used to represent different scenarios for the Theory below.
 // It contains the expected Tile result and the parameters to create a Tile.
@@ -62,8 +63,24 @@ type TileTestData =
             BoundingBoxTopLeft = Point(512, 640)
             BoundingBoxWidth = 256
         }
+
+        // Tile is the last tile in the bottom right corner of a 1024x1024 map.
+        let bottomRightTile = {
+            ExpectedTile = {
+                BoundingBoxTopLeft = Point(768, 128)
+                BoundingBoxTopRight = Point(1024, 128)
+                BoundingBoxBottomLeft = Point(768, 0)
+                BoundingBoxBottomRight = Point(1024, 0)
+                Top = Point(896, 128)
+                Right = Point(1024, 64)
+                Bottom = Point(896, 0)
+                Left = Point(768, 64)
+            }
+            BoundingBoxTopLeft = Point(768, 128)
+            BoundingBoxWidth = 256
+        }
         // We need to return IEnumerable<object[]> for MemberDataAttribute.
-        [|firstTile; biggerTile; middleTile|] |> Seq.map(fun x -> [|x|])
+        [|firstTile; biggerTile; middleTile; bottomRightTile|] |> Seq.map(fun x -> [|x|])
 
 type TileTests() =
 
@@ -85,3 +102,15 @@ type TileTests() =
         tile.Bottom.Should().Be(tileTestData.ExpectedTile.Bottom) |> ignore
         tile.Left.Should().Be(tileTestData.ExpectedTile.Left) |> ignore        
         tile.Should().Be(tileTestData.ExpectedTile) |> ignore
+
+    [<Fact>]
+    member _.``Creating a tile with negative width throws an exception`` () =
+        // Arrange
+        let boundingBoxTopLeft = Point(0, 0)
+        let boundingBoxWidth = -1
+
+        // Act
+        let createTileWithNegativeWidth = fun () -> createTile boundingBoxTopLeft boundingBoxWidth
+
+        // Assert
+        createTileWithNegativeWidth.Should().Throw<ArgumentException, _>()
