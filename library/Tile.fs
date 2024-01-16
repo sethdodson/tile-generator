@@ -1,6 +1,7 @@
 module Tile
 
 open System.Drawing
+open System
 
 type Tile = {
     Top: Point
@@ -27,6 +28,8 @@ type Tile = {
         graphics.DrawLine(pen, this.Left, this.Top)
 
 let createTile (boundingBoxTopLeft: Point) (boundingBoxWidth: int) : Tile =
+    if (boundingBoxWidth < 1)
+        then raise (new ArgumentException("boundingBoxWidth must be greater than 0"))
     let leftSide = boundingBoxTopLeft.X
     let rightSide = boundingBoxTopLeft.X + boundingBoxWidth
     let top = boundingBoxTopLeft.Y    
