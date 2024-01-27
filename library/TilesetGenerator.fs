@@ -2,7 +2,15 @@
 
 open System.IO
 open System.Drawing
+open Tile
 
+
+let createTiles (numberOfTiles: int) (tileWidth: int) (tilesPerRow: int) =
+    [for i in 0 .. numberOfTiles - 1 ->
+        let x = i * tileWidth
+        let y = tileWidth / 2
+        let boundingBoxTopLeft = Point(x, y)
+        createTile boundingBoxTopLeft tileWidth]
 
 let generateFromSourceImage (sourceDirectory: DirectoryInfo) (outputDirectory: DirectoryInfo) (numberOfTiles: int) =
     let tileWidth, tileHeight = 256, 128  // Bounding box dimensions of each tile
