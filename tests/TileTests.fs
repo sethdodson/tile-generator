@@ -19,64 +19,67 @@ type TileTestData =
 
     static member Scenarios =
         // Tile is the first tile in the upper left corner.
+        // In coordinates used by graphics libraries, 0,0 is the upper left corner.
+        // y values increase as you go down, x values increase as you go right.
+        // This is not what you expect from a cartesian plane.
         let firstTile = {
             ExpectedTile = {
-                BoundingBoxTopLeft = Point(0, 128)
-                BoundingBoxTopRight = Point(256, 128)
-                BoundingBoxBottomLeft = Point(0, 0)
-                BoundingBoxBottomRight = Point(256, 0)
-                Top = Point(128, 128)
+                BoundingBoxTopLeft = Point(0, 0)
+                BoundingBoxTopRight = Point(256, 0)
+                BoundingBoxBottomLeft = Point(0, 128)
+                BoundingBoxBottomRight = Point(256, 128)
+                Top = Point(128, 0)
                 Right = Point(256, 64)
-                Bottom = Point(128, 0)
+                Bottom = Point(128, 128)
                 Left = Point(0, 64)
             }
-            BoundingBoxTopLeft = Point(0, 128)
+            BoundingBoxTopLeft = Point(0, 0)
             BoundingBoxWidth = 256
         }
         // Tile with a different size.
         let biggerTile = {
             ExpectedTile = {
-                BoundingBoxTopLeft = Point(0, 256)
-                BoundingBoxTopRight = Point(512, 256)
-                BoundingBoxBottomLeft = Point(0, 0)
-                BoundingBoxBottomRight = Point(512, 0)
-                Top = Point(256, 256)
+                BoundingBoxTopLeft = Point(0, 0)
+                BoundingBoxTopRight = Point(512, 0)
+                BoundingBoxBottomLeft = Point(0, 256)
+                BoundingBoxBottomRight = Point(512, 256)
+                Top = Point(256, 0)
                 Right = Point(512, 128)
-                Bottom = Point(256, 0)
+                Bottom = Point(256, 256)
                 Left = Point(0, 128)
             }
-            BoundingBoxTopLeft = Point(0, 256)
+            BoundingBoxTopLeft = Point(0, 0)
             BoundingBoxWidth = 512
         }
-        // Tile is close to the middle of a 1024x1024 map. 4 tiles across, 8 tiles down.
+        // Tile is close to the middle of a 1024x1024 tileset. 4 tiles across, 8 tiles down.
         let middleTile = {
             ExpectedTile = {
-                BoundingBoxTopLeft = Point(512, 640)
-                BoundingBoxTopRight = Point(768, 640)
-                BoundingBoxBottomLeft = Point(512, 512)
-                BoundingBoxBottomRight = Point(768, 512)
-                Top = Point(640, 640)
-                Right = Point(768, 576)
-                Bottom = Point(640, 512)
-                Left = Point(512, 576)
+                BoundingBoxTopLeft = Point(256, 512)
+                BoundingBoxTopRight = Point(512, 512)
+                BoundingBoxBottomLeft = Point(256, 640)
+                BoundingBoxBottomRight = Point(512, 640)
+                Top = Point(384, 512)
+                Right = Point(512, 576)
+                Bottom = Point(384, 640)
+                Left = Point(256, 576)
             }
-            BoundingBoxTopLeft = Point(512, 640)
+            BoundingBoxTopLeft = Point(256, 512)
             BoundingBoxWidth = 256
         }
 
-        // Tile is the last tile in the bottom right corner of a 1024x1024 map.
+        // Tile is the last tile in the bottom right corner of a 1024x1024 tileset.
         let bottomRightTile = {
             ExpectedTile = {
-                BoundingBoxTopLeft = Point(768, 128)
-                BoundingBoxTopRight = Point(1024, 128)
-                BoundingBoxBottomLeft = Point(768, 0)
-                BoundingBoxBottomRight = Point(1024, 0)
-                Top = Point(896, 128)
-                Right = Point(1024, 64)
-                Bottom = Point(896, 0)
-                Left = Point(768, 64)
+                BoundingBoxTopLeft = Point(768, 896)
+                BoundingBoxTopRight = Point(1024, 896)
+                BoundingBoxBottomLeft = Point(768, 1024)
+                BoundingBoxBottomRight = Point(1024, 1024)
+                Top = Point(896, 896)
+                Right = Point(1024, 960)
+                Bottom = Point(896, 1024)
+                Left = Point(768, 960)
             }
-            BoundingBoxTopLeft = Point(768, 128)
+            BoundingBoxTopLeft = Point(768, 896)
             BoundingBoxWidth = 256
         }
         // We need to return IEnumerable<object[]> for MemberDataAttribute.
