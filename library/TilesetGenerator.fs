@@ -6,9 +6,10 @@ open Tile
 
 
 let createTiles (numberOfTiles: int) (tileWidth: int) (tilesPerRow: int) =
+    let tileHeight = tileWidth / 2 // Isometric tiles are half as tall as they are wide
     [for i in 0 .. numberOfTiles - 1 ->
-        let x = i * tileWidth
-        let y = tileWidth / 2
+        let x = (i % tilesPerRow) * tileWidth
+        let y = (i / tilesPerRow) * tileHeight
         let boundingBoxTopLeft = Point(x, y)
         createTile boundingBoxTopLeft tileWidth]
 

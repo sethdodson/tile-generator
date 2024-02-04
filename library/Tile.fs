@@ -35,8 +35,8 @@ let createTile (boundingBoxTopLeft: Point) (boundingBoxWidth: int) : Tile =
     let top = boundingBoxTopLeft.Y    
     let middleWidth = leftSide + (boundingBoxWidth / 2)
     let height = boundingBoxWidth / 2
-    let bottom = top - height
-    let middleHeight = bottom + (height / 2)
+    let bottom = top + height // the reason this is addition and not subtraction is because Y increases as you go down.
+    let middleHeight = top + (height / 2) // see above comment for clarity.
     {
         BoundingBoxTopLeft = boundingBoxTopLeft
         BoundingBoxTopRight = Point(rightSide, top)
