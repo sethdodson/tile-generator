@@ -27,9 +27,11 @@ type TilesetGeneratorTests() =
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)        
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
         let numberOfTiles = 1
+        let tileWidth = 256
+        let tilesPerRow = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles
+        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
 
         // Assert
         outputDirectory.GetFiles().Should().HaveLength(1)
@@ -42,9 +44,11 @@ type TilesetGeneratorTests() =
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
         let numberOfTiles = 1
+        let tileWidth = 256
+        let tilesPerRow = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles
+        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
 
         // Assert
         let files = outputDirectory.GetFiles()
@@ -59,9 +63,11 @@ type TilesetGeneratorTests() =
         let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
         let outputDirectory = new DirectoryInfo(outputDirectoryPath)
         let numberOfTiles = 1
+        let tileWidth = 256
+        let tilesPerRow = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles
+        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
 
         // Assert
         let files = outputDirectory.GetFiles()
@@ -82,10 +88,11 @@ type TilesetGeneratorTests() =
         // Arrange
         let numberOfTiles = 10
         let tileWidth = 256
+        let tileHeight = 128
         let tilesPerRow = 1
 
         // Act
-        let tiles = createTiles numberOfTiles tileWidth tilesPerRow
+        let tiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
 
         // Assert
         tiles.Length.Should().Be(numberOfTiles) |> ignore
@@ -95,16 +102,17 @@ type TilesetGeneratorTests() =
         // Arrange
         let numberOfTiles = 2
         let tileWidth = 256
+        let tileHeight = 128
         let tilesPerRow = 5
 
         let expectedTiles = 
-            [
+            [[
                 { Top = Point(128, 0); Right = Point(256, 64); Bottom = Point(128, 128); Left = Point(0, 64); BoundingBoxTopLeft = Point(0, 0); BoundingBoxTopRight = Point(256, 0); BoundingBoxBottomLeft = Point(0, 128); BoundingBoxBottomRight = Point(256, 128) }
                 { Top = Point(384, 0); Right = Point(512, 64); Bottom = Point(384, 128); Left = Point(256, 64); BoundingBoxTopLeft = Point(256, 0); BoundingBoxTopRight = Point(512, 0); BoundingBoxBottomLeft = Point(256, 128); BoundingBoxBottomRight = Point(512, 128) }
-            ]
+            ]]
 
         // Act
-        let tiles = createTiles numberOfTiles tileWidth tilesPerRow
+        let tiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
 
         // Assert
         Assert.Equal<Tile list>(expectedTiles, tiles) |> ignore
@@ -114,19 +122,26 @@ type TilesetGeneratorTests() =
         // Arrange
         let numberOfTiles = 5
         let tileWidth = 256
+        let tileHeight = 128
         let tilesPerRow = 2
 
         let expectedTiles = 
             [
-                { Top = Point(128, 0); Right = Point(256, 64); Bottom = Point(128, 128); Left = Point(0, 64); BoundingBoxTopLeft = Point(0, 0); BoundingBoxTopRight = Point(256, 0); BoundingBoxBottomLeft = Point(0, 128); BoundingBoxBottomRight = Point(256, 128) }
-                { Top = Point(384, 0); Right = Point(512, 64); Bottom = Point(384, 128); Left = Point(256, 64); BoundingBoxTopLeft = Point(256, 0); BoundingBoxTopRight = Point(512, 0); BoundingBoxBottomLeft = Point(256, 128); BoundingBoxBottomRight = Point(512, 128) }
-                { Top = Point(128, 128); Right = Point(256, 192); Bottom = Point(128, 256); Left = Point(0, 192); BoundingBoxTopLeft = Point(0, 128); BoundingBoxTopRight = Point(256, 128); BoundingBoxBottomLeft = Point(0, 256); BoundingBoxBottomRight = Point(256, 256) }
-                { Top = Point(384, 128); Right = Point(512, 192); Bottom = Point(384, 256); Left = Point(256, 192); BoundingBoxTopLeft = Point(256, 128); BoundingBoxTopRight = Point(512, 128); BoundingBoxBottomLeft = Point(256, 256); BoundingBoxBottomRight = Point(512, 256) }
-                { Top = Point(128, 256); Right = Point(256, 320); Bottom = Point(128, 384); Left = Point(0, 320); BoundingBoxTopLeft = Point(0, 256); BoundingBoxTopRight = Point(256, 256); BoundingBoxBottomLeft = Point(0, 384); BoundingBoxBottomRight = Point(256, 384) }
+                [   
+                    { Top = Point(128, 0); Right = Point(256, 64); Bottom = Point(128, 128); Left = Point(0, 64); BoundingBoxTopLeft = Point(0, 0); BoundingBoxTopRight = Point(256, 0); BoundingBoxBottomLeft = Point(0, 128); BoundingBoxBottomRight = Point(256, 128) }
+                    { Top = Point(384, 0); Right = Point(512, 64); Bottom = Point(384, 128); Left = Point(256, 64); BoundingBoxTopLeft = Point(256, 0); BoundingBoxTopRight = Point(512, 0); BoundingBoxBottomLeft = Point(256, 128); BoundingBoxBottomRight = Point(512, 128) }
+                ]
+                [
+                    { Top = Point(128, 128); Right = Point(256, 192); Bottom = Point(128, 256); Left = Point(0, 192); BoundingBoxTopLeft = Point(0, 128); BoundingBoxTopRight = Point(256, 128); BoundingBoxBottomLeft = Point(0, 256); BoundingBoxBottomRight = Point(256, 256) }
+                    { Top = Point(384, 128); Right = Point(512, 192); Bottom = Point(384, 256); Left = Point(256, 192); BoundingBoxTopLeft = Point(256, 128); BoundingBoxTopRight = Point(512, 128); BoundingBoxBottomLeft = Point(256, 256); BoundingBoxBottomRight = Point(512, 256) }
+                ]
+                [
+                    { Top = Point(128, 256); Right = Point(256, 320); Bottom = Point(128, 384); Left = Point(0, 320); BoundingBoxTopLeft = Point(0, 256); BoundingBoxTopRight = Point(256, 256); BoundingBoxBottomLeft = Point(0, 384); BoundingBoxBottomRight = Point(256, 384) }
+                ]
             ]
 
         // Act
-        let tiles = createTiles numberOfTiles tileWidth tilesPerRow
+        let tiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
 
         // Assert
         Assert.Equal<Tile list>(expectedTiles, tiles) |> ignore

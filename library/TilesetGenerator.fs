@@ -5,9 +5,7 @@ open System.Drawing
 open Tile
 
 
-let createTiles numberOfTiles tileWidth tilesPerRow =
-    let tileHeight = tileWidth / 2
-
+let createTiles numberOfTiles tileWidth tileHeight tilesPerRow =
     let calculateLeftSideX tileIndex = 
         let columnIndex = tileIndex % tilesPerRow
         columnIndex * tileWidth
@@ -22,15 +20,22 @@ let createTiles numberOfTiles tileWidth tilesPerRow =
         let boundingBoxTopLeft = calculateBoundingBoxTopLeft tileIndex
         createTile boundingBoxTopLeft tileWidth
 
-    [for i in 0 .. numberOfTiles - 1 -> createTileForTileIndex i]
+    let tiles = [for i in 0 .. numberOfTiles - 1 -> createTileForTileIndex i]
+    List.chunkBySize tilesPerRow tiles
 
-let generateFromSourceImage (sourceDirectory: DirectoryInfo) (outputDirectory: DirectoryInfo) (numberOfTiles: int) =
+let generateFromSourceImage (sourceDirectory: DirectoryInfo) (outputDirectory: DirectoryInfo) numberOfTiles tileWidth tilesPerRow =
+    let tileHeight = tileWidth / 2
 
-    let tileWidth, tileHeight = 256, 128  // Bounding box dimensions of each tile
-    use bitmap = new Bitmap(tileWidth, tileHeight)
+    let rowsOfTiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
+
+    let numberOfRows = rowsOfTiles.Length
+    use bitmap = new Bitmap(tileWidth * tilesPerRow, tileHeight * numberOfRows)
     use graphics = Graphics.FromImage(bitmap)
-    let tile = Tile.createTile (new Point(0, 128)) 256
-    tile.DrawBoundingBox graphics
-    tile.DrawTile graphics
+
+    for row in rowsOfTiles do
+        for tile in row do
+            tile.DrawBoundingBox graphics
+            tile.DrawTile graphics
+
     let outputPath = Path.Combine(outputDirectory.FullName, "tileset.png")
     bitmap.Save(outputPath, Imaging.ImageFormat.Png)
