@@ -2,35 +2,39 @@ module Tile
 
 open System.Drawing
 open System
+open UnitsOfMeasure
+open Pixel
+
 
 type Tile = {
-    Top: Point
-    Right: Point
-    Bottom: Point
-    Left: Point
-    BoundingBoxTopLeft: Point
-    BoundingBoxTopRight: Point
-    BoundingBoxBottomLeft: Point
-    BoundingBoxBottomRight: Point
+    Top: PixelPoint
+    Right: PixelPoint
+    Bottom: PixelPoint
+    Left: PixelPoint
+    BoundingBoxTopLeft: PixelPoint
+    BoundingBoxTopRight: PixelPoint
+    BoundingBoxBottomLeft: PixelPoint
+    BoundingBoxBottomRight: PixelPoint
 } with 
     member this.DrawBoundingBox(graphics: Graphics) =
         use pen = new Pen(Color.Red, 1.0f)
-        graphics.DrawLine(pen, this.BoundingBoxTopLeft, this.BoundingBoxTopRight)
-        graphics.DrawLine(pen, this.BoundingBoxTopRight, this.BoundingBoxBottomRight)
-        graphics.DrawLine(pen, this.BoundingBoxBottomRight, this.BoundingBoxBottomLeft)
-        graphics.DrawLine(pen, this.BoundingBoxBottomLeft, this.BoundingBoxTopLeft)
+        graphics.DrawLine(pen, this.BoundingBoxTopLeft.ToPoint(), this.BoundingBoxTopRight.ToPoint())
+        graphics.DrawLine(pen, this.BoundingBoxTopRight.ToPoint(), this.BoundingBoxBottomRight.ToPoint())
+        graphics.DrawLine(pen, this.BoundingBoxBottomRight.ToPoint(), this.BoundingBoxBottomLeft.ToPoint())
+        graphics.DrawLine(pen, this.BoundingBoxBottomLeft.ToPoint(), this.BoundingBoxTopLeft.ToPoint())
 
     member this.DrawTile(graphics: Graphics) =
         use pen = new Pen(Color.Blue, 1.0f)
-        graphics.DrawLine(pen, this.Top, this.Right)
-        graphics.DrawLine(pen, this.Right, this.Bottom)
-        graphics.DrawLine(pen, this.Bottom, this.Left)
-        graphics.DrawLine(pen, this.Left, this.Top)
+        graphics.DrawLine(pen, this.Top.ToPoint(), this.Right.ToPoint())
+        graphics.DrawLine(pen, this.Right.ToPoint(), this.Bottom.ToPoint())
+        graphics.DrawLine(pen, this.Bottom.ToPoint(), this.Left.ToPoint())
+        graphics.DrawLine(pen, this.Left.ToPoint(), this.Top.ToPoint())
 
-let createTile (boundingBoxTopLeft: Point) (boundingBoxWidth: int) : Tile =
-    if (boundingBoxWidth < 1)
-        then raise (new ArgumentException("boundingBoxWidth must be greater than 0"))
-    let leftSide = boundingBoxTopLeft.X
+let createTile (boundingBoxTopLeft: PixelPoint) (boundingBoxWidth: int<pixel>) : Tile =
+    if (boundingBoxWidth < 1<pixel>)
+        then raise (new ArgumentException("boundingBoxWidth must be greater than 0 pixels."))
+
+    let leftSide = boundingBoxTopLeft.X 
     let rightSide = boundingBoxTopLeft.X + boundingBoxWidth
     let top = boundingBoxTopLeft.Y    
     let middleWidth = leftSide + (boundingBoxWidth / 2)
@@ -39,11 +43,11 @@ let createTile (boundingBoxTopLeft: Point) (boundingBoxWidth: int) : Tile =
     let middleHeight = top + (height / 2) // see above comment for clarity.
     {
         BoundingBoxTopLeft = boundingBoxTopLeft
-        BoundingBoxTopRight = Point(rightSide, top)
-        BoundingBoxBottomLeft = Point(leftSide, bottom)
-        BoundingBoxBottomRight = Point(rightSide, bottom)
-        Top = Point(middleWidth, top)
-        Right = Point(rightSide, middleHeight)
-        Bottom = Point(middleWidth, bottom)
-        Left = Point(leftSide, middleHeight)
+        BoundingBoxTopRight = { X = rightSide; Y = top }
+        BoundingBoxBottomLeft = { X = leftSide; Y = bottom }
+        BoundingBoxBottomRight = { X = rightSide; Y = bottom }
+        Top = { X = middleWidth; Y = top }
+        Right = { X = rightSide; Y = middleHeight }
+        Bottom = { X = middleWidth; Y = bottom }
+        Left = { X = leftSide; Y = middleHeight }
     }

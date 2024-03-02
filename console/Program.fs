@@ -1,5 +1,6 @@
 ﻿open TilesetGenerator
 open System.IO
+open UnitsOfMeasure
 
 [<EntryPoint>]
 let main argv =
@@ -11,7 +12,16 @@ let main argv =
     let tilesPerRow = argv.[3] |> int
     let tileWidth = 256
 
+    let parameters = 
+        { 
+            SourceDirectory = sourceDirectory; 
+            OutputDirectory = outputDirectory; 
+            NumberOfTiles = numberOfTiles * 1<tile>; 
+            TileWidth = tileWidth * 1<pixel>; 
+            TilesPerRow = tilesPerRow * 1<tile>;
+        }
 
-    generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
+
+    generateFromSourceImage parameters
 
     0 // return an integer exit code

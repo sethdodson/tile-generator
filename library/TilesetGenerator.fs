@@ -3,33 +3,48 @@
 open System.IO
 open System.Drawing
 open Tile
+open UnitsOfMeasure
+open Pixel
 
 
-let createTiles numberOfTiles tileWidth tileHeight tilesPerRow =
-    let calculateLeftSideX tileIndex = 
-        let columnIndex = tileIndex % tilesPerRow
-        columnIndex * tileWidth
+type GenerateTilesParameters = {
+    SourceDirectory: DirectoryInfo
+    OutputDirectory: DirectoryInfo
+    NumberOfTiles: int<tile>
+    TileWidth: int<pixel>
+    TilesPerRow: int<tile>
+}
 
-    let calculateTopSideY tileIndex =
-        let rowIndex = tileIndex / tilesPerRow
+let createTiles generateTilesParameters (tileHeight: int<pixel>) =
+    let calculateLeftSideX (tileIndex:int) = 
+        let columnIndex = tileIndex % (int generateTilesParameters.TilesPerRow)
+        columnIndex * generateTilesParameters.TileWidth
+
+    let calculateTopSideY (tileIndex: int) =
+        let rowIndex = tileIndex / (int generateTilesParameters.TilesPerRow)
         rowIndex * tileHeight
 
-    let calculateBoundingBoxTopLeft tileIndex = Point(calculateLeftSideX tileIndex, calculateTopSideY tileIndex)
+    let calculateBoundingBoxTopLeft tileIndex = { X = (calculateLeftSideX tileIndex); Y = (calculateTopSideY tileIndex) } 
 
-    let createTileForTileIndex tileIndex = 
+    let createTileAtTileIndex tileIndex = 
         let boundingBoxTopLeft = calculateBoundingBoxTopLeft tileIndex
-        createTile boundingBoxTopLeft tileWidth
+        createTile boundingBoxTopLeft generateTilesParameters.TileWidth
 
-    let tiles = [for i in 0 .. numberOfTiles - 1 -> createTileForTileIndex i]
-    List.chunkBySize tilesPerRow tiles
+    let tiles = List.init (int generateTilesParameters.NumberOfTiles) createTileAtTileIndex
+    List.chunkBySize (int generateTilesParameters.TilesPerRow) tiles
 
-let generateFromSourceImage (sourceDirectory: DirectoryInfo) (outputDirectory: DirectoryInfo) numberOfTiles tileWidth tilesPerRow =
-    let tileHeight = tileWidth / 2
+let generateFromSourceImage generateTilesParameters =
+    let tileHeight = generateTilesParameters.TileWidth / 2
 
-    let rowsOfTiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
+    let rowsOfTiles = createTiles generateTilesParameters tileHeight
 
     let numberOfRows = rowsOfTiles.Length
-    use bitmap = new Bitmap(tileWidth * tilesPerRow, tileHeight * numberOfRows)
+
+    let totalWidth = (int generateTilesParameters.TileWidth) * (int generateTilesParameters.TilesPerRow)
+
+    let totalHeight = (int tileHeight) * (int numberOfRows)
+
+    use bitmap = new Bitmap(totalWidth, totalHeight)
     use graphics = Graphics.FromImage(bitmap)
 
     for row in rowsOfTiles do
@@ -37,5 +52,5 @@ let generateFromSourceImage (sourceDirectory: DirectoryInfo) (outputDirectory: D
             tile.DrawBoundingBox graphics
             tile.DrawTile graphics
 
-    let outputPath = Path.Combine(outputDirectory.FullName, "tileset.png")
+    let outputPath = Path.Combine(generateTilesParameters.OutputDirectory.FullName, "tileset.png")
     bitmap.Save(outputPath, Imaging.ImageFormat.Png)

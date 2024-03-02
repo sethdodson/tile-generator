@@ -7,7 +7,7 @@ open System.Drawing
 open System
 open Tile
 open TilesetGenerator
-
+open UnitsOfMeasure
 type TilesetGeneratorTests() =
     let projectDirectoryPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName
     let sourceDirectoryPath = Path.Combine(projectDirectoryPath, "source-images")
@@ -23,35 +23,41 @@ type TilesetGeneratorTests() =
 
     [<Fact>]
     member _. ``generateFromSourceImage generates a png given valid directories`` () =
-        // Arrange             
-        let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)        
-        let outputDirectory = new DirectoryInfo(outputDirectoryPath)
-        let numberOfTiles = 1
-        let tileWidth = 256
-        let tilesPerRow = 1
+        // Arrange
+        let parameters = 
+            { 
+                SourceDirectory = new DirectoryInfo(sourceDirectoryPath); 
+                OutputDirectory = new DirectoryInfo(outputDirectoryPath); 
+                NumberOfTiles = 1<tile>; 
+                TileWidth = 256<pixel>; 
+                TilesPerRow = 1<tile>
+            }
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
+        generateFromSourceImage parameters
 
         // Assert
-        outputDirectory.GetFiles().Should().HaveLength(1)
+        parameters.OutputDirectory.GetFiles().Should().HaveLength(1)
 
     [<Fact>]
     member _.``generated tile has correct dimensions`` () =
         // Arrange
+        let parameters = 
+            { 
+                SourceDirectory = new DirectoryInfo(sourceDirectoryPath); 
+                OutputDirectory = new DirectoryInfo(outputDirectoryPath); 
+                NumberOfTiles = 1<tile>; 
+                TileWidth = 256<pixel>; 
+                TilesPerRow = 1<tile>
+            }
         let expectedWidth = 256
         let expectedHeight =  128
-        let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
-        let outputDirectory = new DirectoryInfo(outputDirectoryPath)
-        let numberOfTiles = 1
-        let tileWidth = 256
-        let tilesPerRow = 1
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
+        generateFromSourceImage parameters
 
         // Assert
-        let files = outputDirectory.GetFiles()
+        let files = parameters.OutputDirectory.GetFiles()
         files.Length.Should().Be(1) |> ignore
         use tilesetImage = Image.FromFile(files.[0].FullName) :?> Bitmap
         tilesetImage.Width.Should().Be(expectedWidth) |> ignore
@@ -60,17 +66,20 @@ type TilesetGeneratorTests() =
     [<Fact>]
     member _.``generated tileset is not of uniform color`` () =
         // Arrange
-        let sourceDirectory = new DirectoryInfo(sourceDirectoryPath)
-        let outputDirectory = new DirectoryInfo(outputDirectoryPath)
-        let numberOfTiles = 1
-        let tileWidth = 256
-        let tilesPerRow = 1
+        let parameters = 
+            { 
+                SourceDirectory = new DirectoryInfo(sourceDirectoryPath); 
+                OutputDirectory = new DirectoryInfo(outputDirectoryPath); 
+                NumberOfTiles = 1<tile>; 
+                TileWidth = 256<pixel>; 
+                TilesPerRow = 1<tile>
+            }
 
         // Act
-        generateFromSourceImage sourceDirectory outputDirectory numberOfTiles tileWidth tilesPerRow
+        generateFromSourceImage parameters
 
         // Assert
-        let files = outputDirectory.GetFiles()
+        let files = parameters.OutputDirectory.GetFiles()
         files.Length.Should().Be(1) |> ignore
         use tilesetImage = Image.FromFile(files.[0].FullName) :?> Bitmap
         let firstPixel = tilesetImage.GetPixel(0, 0)
@@ -86,62 +95,76 @@ type TilesetGeneratorTests() =
     [<Fact>]
     member _.``creating tiles generates the correct number of tiles``() =
         // Arrange
-        let numberOfTiles = 10
-        let tileWidth = 256
-        let tileHeight = 128
-        let tilesPerRow = 1
+        let parameters = 
+            { 
+                SourceDirectory = new DirectoryInfo(sourceDirectoryPath); 
+                OutputDirectory = new DirectoryInfo(outputDirectoryPath); 
+                NumberOfTiles = 10<tile>; 
+                TileWidth = 256<pixel>; 
+                TilesPerRow = 1<tile>
+            }
+        let tileHeight = 128<pixel>
 
         // Act
-        let tiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
+        let tiles = createTiles parameters tileHeight
 
         // Assert
-        tiles.Length.Should().Be(numberOfTiles) |> ignore
+        tiles.Length.Should().Be(int parameters.NumberOfTiles) |> ignore
 
     [<Fact>]
     member _.``creating tiles with one row generates tiles with correct dimensions``() =
         // Arrange
-        let numberOfTiles = 2
-        let tileWidth = 256
-        let tileHeight = 128
-        let tilesPerRow = 5
+        let parameters = 
+            { 
+                SourceDirectory = new DirectoryInfo(sourceDirectoryPath); 
+                OutputDirectory = new DirectoryInfo(outputDirectoryPath); 
+                NumberOfTiles = 2<tile>; 
+                TileWidth = 256<pixel>; 
+                TilesPerRow = 5<tile>
+            }
+        let tileHeight = 128<pixel>
 
         let expectedTiles = 
             [[
-                { Top = Point(128, 0); Right = Point(256, 64); Bottom = Point(128, 128); Left = Point(0, 64); BoundingBoxTopLeft = Point(0, 0); BoundingBoxTopRight = Point(256, 0); BoundingBoxBottomLeft = Point(0, 128); BoundingBoxBottomRight = Point(256, 128) }
-                { Top = Point(384, 0); Right = Point(512, 64); Bottom = Point(384, 128); Left = Point(256, 64); BoundingBoxTopLeft = Point(256, 0); BoundingBoxTopRight = Point(512, 0); BoundingBoxBottomLeft = Point(256, 128); BoundingBoxBottomRight = Point(512, 128) }
+                { Top = { X = 128<pixel>; Y = 0<pixel> }; Right = { X = 256<pixel>; Y = 64<pixel> }; Bottom = { X = 128<pixel>; Y = 128<pixel> }; Left = { X = 0<pixel>; Y = 64<pixel> }; BoundingBoxTopLeft = { X = 0<pixel>; Y = 0<pixel> }; BoundingBoxTopRight = { X = 256<pixel>; Y = 0<pixel> }; BoundingBoxBottomLeft = { X = 0<pixel>; Y = 128<pixel> }; BoundingBoxBottomRight = { X = 256<pixel>; Y = 128<pixel> } }
+                { Top = { X = 384<pixel>; Y = 0<pixel> }; Right = { X = 512<pixel>; Y = 64<pixel> }; Bottom = { X = 384<pixel>; Y = 128<pixel> }; Left = { X = 256<pixel>; Y = 64<pixel> }; BoundingBoxTopLeft = { X = 256<pixel>; Y = 0<pixel> }; BoundingBoxTopRight = { X = 512<pixel>; Y = 0<pixel> }; BoundingBoxBottomLeft = { X = 256<pixel>; Y = 128<pixel> }; BoundingBoxBottomRight = { X = 512<pixel>; Y = 128<pixel> } }
             ]]
 
         // Act
-        let tiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
-
+        let tiles = createTiles parameters tileHeight
         // Assert
         Assert.Equal<Tile list>(expectedTiles, tiles) |> ignore
 
     [<Fact>]
     member _.``creating tiles with multiple rows generates tiles with the correct dimensions and locations``() =
         // Arrange
-        let numberOfTiles = 5
-        let tileWidth = 256
-        let tileHeight = 128
-        let tilesPerRow = 2
+        let parameters = 
+            { 
+                SourceDirectory = new DirectoryInfo(sourceDirectoryPath); 
+                OutputDirectory = new DirectoryInfo(outputDirectoryPath); 
+                NumberOfTiles = 5<tile>; 
+                TileWidth = 256<pixel>; 
+                TilesPerRow = 2<tile>
+            }
+        let tileHeight = 128<pixel>        
 
         let expectedTiles = 
             [
                 [   
-                    { Top = Point(128, 0); Right = Point(256, 64); Bottom = Point(128, 128); Left = Point(0, 64); BoundingBoxTopLeft = Point(0, 0); BoundingBoxTopRight = Point(256, 0); BoundingBoxBottomLeft = Point(0, 128); BoundingBoxBottomRight = Point(256, 128) }
-                    { Top = Point(384, 0); Right = Point(512, 64); Bottom = Point(384, 128); Left = Point(256, 64); BoundingBoxTopLeft = Point(256, 0); BoundingBoxTopRight = Point(512, 0); BoundingBoxBottomLeft = Point(256, 128); BoundingBoxBottomRight = Point(512, 128) }
+                    { Top = { X = 128<pixel>; Y = 0<pixel> }; Right = { X = 256<pixel>; Y = 64<pixel> }; Bottom = { X = 128<pixel>; Y = 128<pixel> }; Left = { X = 0<pixel>; Y = 64<pixel> }; BoundingBoxTopLeft = { X = 0<pixel>; Y = 0<pixel> }; BoundingBoxTopRight = { X = 256<pixel>; Y = 0<pixel> }; BoundingBoxBottomLeft = { X = 0<pixel>; Y = 128<pixel> }; BoundingBoxBottomRight = { X = 256<pixel>; Y = 128<pixel> } }
+                    { Top = { X = 384<pixel>; Y = 0<pixel> }; Right = { X = 512<pixel>; Y = 64<pixel> }; Bottom = { X = 384<pixel>; Y = 128<pixel> }; Left = { X = 256<pixel>; Y = 64<pixel> }; BoundingBoxTopLeft = { X = 256<pixel>; Y = 0<pixel> }; BoundingBoxTopRight = { X = 512<pixel>; Y = 0<pixel> }; BoundingBoxBottomLeft = { X = 256<pixel>; Y = 128<pixel> }; BoundingBoxBottomRight = { X = 512<pixel>; Y = 128<pixel> } }
                 ]
                 [
-                    { Top = Point(128, 128); Right = Point(256, 192); Bottom = Point(128, 256); Left = Point(0, 192); BoundingBoxTopLeft = Point(0, 128); BoundingBoxTopRight = Point(256, 128); BoundingBoxBottomLeft = Point(0, 256); BoundingBoxBottomRight = Point(256, 256) }
-                    { Top = Point(384, 128); Right = Point(512, 192); Bottom = Point(384, 256); Left = Point(256, 192); BoundingBoxTopLeft = Point(256, 128); BoundingBoxTopRight = Point(512, 128); BoundingBoxBottomLeft = Point(256, 256); BoundingBoxBottomRight = Point(512, 256) }
+                    { Top = { X = 128<pixel>; Y = 128<pixel> }; Right = { X = 256<pixel>; Y = 192<pixel> }; Bottom = { X = 128<pixel>; Y = 256<pixel> }; Left = { X = 0<pixel>; Y = 192<pixel> }; BoundingBoxTopLeft = { X = 0<pixel>; Y = 128<pixel> }; BoundingBoxTopRight = { X = 256<pixel>; Y = 128<pixel> }; BoundingBoxBottomLeft = { X = 0<pixel>; Y = 256<pixel> }; BoundingBoxBottomRight = { X = 256<pixel>; Y = 256<pixel> } }
+                    { Top = { X = 384<pixel>; Y = 128<pixel> }; Right = { X = 512<pixel>; Y = 192<pixel> }; Bottom = { X = 384<pixel>; Y = 256<pixel> }; Left = { X = 256<pixel>; Y = 192<pixel> }; BoundingBoxTopLeft = { X = 256<pixel>; Y = 128<pixel> }; BoundingBoxTopRight = { X = 512<pixel>; Y = 128<pixel> }; BoundingBoxBottomLeft = { X = 256<pixel>; Y = 256<pixel> }; BoundingBoxBottomRight = { X = 512<pixel>; Y = 256<pixel> } }
                 ]
                 [
-                    { Top = Point(128, 256); Right = Point(256, 320); Bottom = Point(128, 384); Left = Point(0, 320); BoundingBoxTopLeft = Point(0, 256); BoundingBoxTopRight = Point(256, 256); BoundingBoxBottomLeft = Point(0, 384); BoundingBoxBottomRight = Point(256, 384) }
+                    { Top = { X = 128<pixel>; Y = 256<pixel> }; Right = { X = 256<pixel>; Y = 320<pixel> }; Bottom = { X = 128<pixel>; Y = 384<pixel> }; Left = { X = 0<pixel>; Y = 320<pixel> }; BoundingBoxTopLeft = { X = 0<pixel>; Y = 256<pixel> }; BoundingBoxTopRight = { X = 256<pixel>; Y = 256<pixel> }; BoundingBoxBottomLeft = { X = 0<pixel>; Y = 384<pixel> }; BoundingBoxBottomRight = { X = 256<pixel>; Y = 384<pixel> } }
                 ]
             ]
 
         // Act
-        let tiles = createTiles numberOfTiles tileWidth tileHeight tilesPerRow
+        let tiles = createTiles parameters tileHeight
 
         // Assert
         Assert.Equal<Tile list>(expectedTiles, tiles) |> ignore
